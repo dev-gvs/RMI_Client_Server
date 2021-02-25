@@ -7,6 +7,9 @@ import rmi.IRemoteServer;
 
 public class Main extends javax.swing.JFrame {
 
+    private Registry registry = null;
+    private IRemoteServer remoteServer = null;
+
     public Main() {
         initComponents();
     }
@@ -21,7 +24,7 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextFieldB = new javax.swing.JTextField();
+        jTextFieldServerName = new javax.swing.JTextField();
         jLabelY = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jTextFieldX = new javax.swing.JTextField();
@@ -30,6 +33,12 @@ public class Main extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jButtonSolve = new javax.swing.JButton();
         jButtonClear = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jTextFieldB = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jTextFieldServerAddress = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jTextFieldServerPort = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GVS03_RMI_Client_Server");
@@ -40,12 +49,13 @@ public class Main extends javax.swing.JFrame {
         jLabel1.setFocusable(false);
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, -1, -1));
 
-        jTextFieldB.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        getContentPane().add(jTextFieldB, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, 90, -1));
+        jTextFieldServerName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jTextFieldServerName.setText("solver");
+        getContentPane().add(jTextFieldServerName, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 340, 180, -1));
 
         jLabelY.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabelY.setText("Y =");
-        getContentPane().add(jLabelY, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 280, 220, -1));
+        getContentPane().add(jLabelY, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 260, 220, -1));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("X =");
@@ -62,8 +72,8 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jTextFieldA, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 280, 90, -1));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel5.setText("B =");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 30, -1));
+        jLabel5.setText("Имя:");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 340, -1, -1));
 
         jButtonSolve.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButtonSolve.setText("Решить");
@@ -72,7 +82,7 @@ public class Main extends javax.swing.JFrame {
                 jButtonSolveActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonSolve, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 250, 220, 30));
+        getContentPane().add(jButtonSolve, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 300, 220, 30));
 
         jButtonClear.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButtonClear.setText("Очистить");
@@ -87,21 +97,52 @@ public class Main extends javax.swing.JFrame {
         });
         getContentPane().add(jButtonClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 300, 220, 30));
 
-        setSize(new java.awt.Dimension(622, 384));
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel6.setText("B =");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 30, -1));
+
+        jTextFieldB.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        getContentPane().add(jTextFieldB, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, 90, -1));
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel7.setText("Адрес сервера:");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 120, -1));
+
+        jTextFieldServerAddress.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jTextFieldServerAddress.setText("localhost");
+        getContentPane().add(jTextFieldServerAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 340, 110, -1));
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel8.setText("Порт:");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 340, -1, -1));
+
+        jTextFieldServerPort.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jTextFieldServerPort.setText("1099");
+        getContentPane().add(jTextFieldServerPort, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 340, 60, -1));
+
+        setSize(new java.awt.Dimension(622, 410));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearActionPerformed
         jTextFieldX.setText("");
         jTextFieldA.setText("");
-        jTextFieldB.setText("");
+        jTextFieldServerName.setText("");
         jLabelY.setText("Y =");
     }//GEN-LAST:event_jButtonClearActionPerformed
 
     private void jButtonSolveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSolveActionPerformed
         try {
-            Registry server = LocateRegistry.getRegistry("localhost", IRemoteServer.PORT);
-            IRemoteServer remoteServer = (IRemoteServer) server.lookup(IRemoteServer.SERVER_NAME);
+            String serverAddress = jTextFieldServerAddress.getText();
+            int serverPort = Integer.parseInt(jTextFieldServerPort.getText());
+            String serverName = jTextFieldServerName.getText();
+
+            if (registry == null || remoteServer == null) {
+                System.out.println("Connecting...");
+                registry = LocateRegistry.getRegistry(serverAddress, serverPort);
+                remoteServer = (IRemoteServer) registry.lookup(serverName);
+                System.out.println("Connected to //" + serverAddress + ":" + serverPort + "/" + serverName);
+            }
 
             double x = Double.parseDouble(jTextFieldX.getText());
             double secondArgument;
@@ -116,6 +157,7 @@ public class Main extends javax.swing.JFrame {
             jLabelY.setText("Y = " + data.getY());
 
         } catch (Exception e) {
+            e.printStackTrace();
             jLabelY.setText("ОШИБКА");
         }
     }//GEN-LAST:event_jButtonSolveActionPerformed
@@ -162,9 +204,15 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabelY;
     private javax.swing.JTextField jTextFieldA;
     private javax.swing.JTextField jTextFieldB;
+    private javax.swing.JTextField jTextFieldServerAddress;
+    private javax.swing.JTextField jTextFieldServerName;
+    private javax.swing.JTextField jTextFieldServerPort;
     private javax.swing.JTextField jTextFieldX;
     // End of variables declaration//GEN-END:variables
 }
