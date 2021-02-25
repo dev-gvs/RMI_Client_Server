@@ -1,16 +1,18 @@
 package rmi;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server implements IRemoteServer {
-
-    private static AtomicBoolean stopServer = new AtomicBoolean(false);
 
     @Override
     public EquationData solveEquation(EquationData data) throws RemoteException {
@@ -33,24 +35,17 @@ public class Server implements IRemoteServer {
         return data;
     }
 
-    @Override
-    public void stopServer() throws RemoteException {
-        stopServer.set(true);
-    }
-    
-    public static void main(String... args) throws AccessException, RemoteException, AlreadyBoundException {
+    public static void main(String... args) throws AccessException, RemoteException, AlreadyBoundException, MalformedURLException, IOException {
         System.out.println("Starting server...");
-        final IRemoteServer server = new Server();
-        LocateRegistry.createRegistry(IRemoteServer.PORT).bind(IRemoteServer.SERVER_NAME, UnicastRemoteObject.exportObject(server, 0));
-        while (!stopServer.get()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                break;
-            }
-        }
-        System.out.println("Server stopped");
-        System.exit(0);
-    }
 
+        URL url = new URL("http://checkip.amazonaws.com");
+        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        String ip = in.readLine();
+
+        System.setProperty("java.rmi.server.hostname", ip);
+        final IRemoteServer server = new Server();
+        LocateRegistry.createRegistry(1099).bind("solver", UnicastRemoteObject.exportObject(server, 1100));
+
+        System.out.println("Started server at //" + ip + ":1099/solver");
+    }
 }
