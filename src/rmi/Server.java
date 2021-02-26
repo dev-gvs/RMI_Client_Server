@@ -35,7 +35,7 @@ public class Server implements IRemoteServer {
         return data;
     }
 
-    public static void main(String... args) throws AccessException, RemoteException, AlreadyBoundException, MalformedURLException, IOException {
+    public static void main(String... args) throws AccessException, RemoteException, AlreadyBoundException, MalformedURLException, IOException, InterruptedException {
         System.out.println("Starting server...");
 
         URL url = new URL("http://checkip.amazonaws.com");
@@ -45,7 +45,11 @@ public class Server implements IRemoteServer {
         System.setProperty("java.rmi.server.hostname", ip);
         final IRemoteServer server = new Server();
         LocateRegistry.createRegistry(1099).bind("solver", UnicastRemoteObject.exportObject(server, 1100));
-
+        
         System.out.println("Started server at //" + ip + ":1099/solver");
+        
+        while (true) {
+            Thread.sleep(100);
+        }
     }
 }
